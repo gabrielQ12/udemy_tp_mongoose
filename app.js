@@ -12,6 +12,8 @@ app.use(morgan);
 
 // Fin des Middlewares//
 
+app.use("/images", express.static("images"));
+
 require("dotenv").config();
 
 

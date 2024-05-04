@@ -9,6 +9,7 @@ const Immobilier = new mongoose.Schema({
     titre : { type: String, required: true},
     description: { type: String, required: true},
     categorie : { type: String, enum: ["location", "vente"]},
+    imageUrl : {type: String, required: true},
     annee : {type: Number, min:1300},
     etat : {type: String, enum: ['neuf', 'ancien']},
     surfaceHabitat : {type: Number, min : 10},

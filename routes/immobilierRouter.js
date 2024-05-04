@@ -1,14 +1,17 @@
 const express = require("express");
 const router = express.Router();
+
+const multer = require("../middlewares/multerConfig");
+
 const immobilierCtrl = require("../controllers/immobilierController");
 
 router.get("",immobilierCtrl.getAllImmobillier);
 
 router.get("/:id",immobilierCtrl.getOneImmobillier);
 
-router.post("",immobilierCtrl.postNewImmobillier);
+router.post("",multer, immobilierCtrl.postNewImmobillier);
 
-router.put("/:id",immobilierCtrl.putModifImmobillier);
+router.put("/:id",multer , immobilierCtrl.putModifImmobillier);
 
 router.delete("/:id",immobilierCtrl.deleteOneImmobillier);
 
