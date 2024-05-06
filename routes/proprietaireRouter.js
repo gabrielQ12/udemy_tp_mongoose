@@ -5,7 +5,8 @@ const proprietaireCtrl = require("../controllers/proprietaireController");
 
 
 
-router.post("",proprietaireCtrl.signUp);
+router.post("/signup",proprietaireCtrl.signUp);
+router.post("/login",proprietaireCtrl.login);
 
 
 
