@@ -5,14 +5,16 @@ const multer = require("../middlewares/multerConfig");
 
 const immobilierCtrl = require("../controllers/immobilierController");
 
-router.get("",immobilierCtrl.getAllImmobillier);
+const authentification = require("../middlewares/verifyLogin");
 
-router.get("/:id",immobilierCtrl.getOneImmobillier);
+router.get("",authentification,immobilierCtrl.getAllImmobillier);
 
-router.post("",multer, immobilierCtrl.postNewImmobillier);
+router.get("/:id",authentification, immobilierCtrl.getOneImmobillier);
 
-router.put("/:id",multer , immobilierCtrl.putModifImmobillier);
+router.post("",authentification, multer, immobilierCtrl.postNewImmobillier);
 
-router.delete("/:id",immobilierCtrl.deleteOneImmobillier);
+router.put("/:id",authentification, multer ,immobilierCtrl.putModifImmobillier);
+
+router.delete("/:id",authentification, immobilierCtrl.deleteOneImmobillier);
 
 module.exports = router;

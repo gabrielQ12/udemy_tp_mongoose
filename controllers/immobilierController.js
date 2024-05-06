@@ -38,6 +38,9 @@ exports.postNewImmobillier = async (req,res) => {
         console.log(immoData);
         console.log(immoFileImage);
 
+        delete immoData._id;
+        delete immoData.proprietaire;
+
         const newImmo = await immobilierModels.create({
             type: immoData.type,
             titre :immoData.titre,
@@ -52,6 +55,7 @@ exports.postNewImmobillier = async (req,res) => {
             ville : immoData.ville,
             adresse : immoData.adresse,
             postal : immoData.postal,
+            proprietaire :  req.auth.userId,
         });
 
 
@@ -73,14 +77,15 @@ exports.putModifImmobillier = async (req,res) => {
     console.log(newObjectImmo);
     try {
         const idRequete = {_id: req.params.id};
-
         const supprimImmoModif = await immobilierModels.findById(idRequete);
-
         const nomImage = supprimImmoModif.imageUrl.split("/images/")[1];
 
         let immoObjet;
 
-        console.log(nomImage);
+        if (supprimImmoModif.proprietaire != req.auth.userId) {
+            res.status(401).send({message : "non authorisé"});
+        } else {
+
         /// première condition ///
         if(req.file && req.body.data){
 
@@ -127,6 +132,8 @@ exports.putModifImmobillier = async (req,res) => {
         .catch((error) =>
             {res.status(400).json({error,message: "envoi donnée erroné"});
         });
+    }
+    // bon user,  authentification reussi ,  fin du else
     } catch (err) {
         res.status(500).send({
             message : err.message || "une erreur s'est produite"

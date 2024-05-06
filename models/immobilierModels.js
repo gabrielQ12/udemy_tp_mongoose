@@ -18,7 +18,7 @@ const Immobilier = new mongoose.Schema({
     ville : {type: String , required: true},
     adresse : {type: String, required: true},
     postal : { type: Number, required: true},
-    proprietaire: [{type : mongoose.Types.ObjectId, ref:"User"}]
+    proprietaire: {type : mongoose.Types.ObjectId, ref:"User"},
 });
 
 module.exports = mongoose.model("Immo", Immobilier);
