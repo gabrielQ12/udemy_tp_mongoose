@@ -2,6 +2,7 @@ const express = require ("express");
 const mongoose = require ("mongoose");
 const app = express();
 const immobilierRoutes = require ("./routes/immobilierRouter");
+const proprietaireRoutes = require ("./routes/proprietaireRouter");
 // Middleware//
 const morgan = require ("./middlewares/infoRequete");
 const bodyParser = require ("./middlewares/parserDonnées");
@@ -28,6 +29,7 @@ mongoose
 
 // Routes//
 app.use("/api/immobilier", immobilierRoutes);
+app.use("/api/authentification", proprietaireRoutes);
 
 // Exemple //
 app.get("",(req,res) => {
