@@ -20,6 +20,7 @@ exports.getAllImmobillier =  (req,res) => {
 exports.getOneImmobillier =  (req,res) => {
     immobilierModels
     .findOne ({_id: req.params.id})
+    .populate({path: "proprietaire", select: "name phone"})
     .then((element) => {
         console.log("1 bien immobillier trouvé");
         res.status(200).json(element)
@@ -83,6 +84,10 @@ exports.putModifImmobillier = async (req,res) => {
         let immoObjet;
 
         if (supprimImmoModif.proprietaire != req.auth.userId) {
+            console.log(req.file); 
+            Fs.unlink(`./images/${req.file.filename}`, () =>
+                console.log("image abandon image / requete non autorisé"),
+        );
             res.status(401).send({message : "non authorisé"});
         } else {
 
@@ -147,24 +152,53 @@ exports.deleteOneImmobillier = async (req,res) => {
 
     try {
         const idRequete = {_id: req.params.id};
+        // Code avec JWT
+        immobilierModels
+        .findById(idRequete)
+        .then((immoSupprim) => {
+            if (immoSupprim.proprietaire != req.auth.userId) {
+                res.status(401)
+                .send({ message : " non authorisé)}" });
+            } else {
+                immobilierModels.deleteOne(idRequete).then(() => {
+                    const nomImage = immoSupprim.imageUrl.split("/images/")[1];
+                    consol.log(nomImage);
+                    Fs.unlink(`./images/${nomImage}`, () =>
+                        console.log("image suprimé "),
+                    );
+                    res.status(201).json ({message :  "trouvé et supprimé"});
+                    console.log("trouvé et supprimé" + immoSupprim);
+                })
+                .catch ((err) => {
+                    res.status(400).json ({ message : "pb supression"});
+                    console.log("non suipprimé " + err);
+                })
+            }
+        })
+        .catch((error) => {
+            res.status(404).json({ message : " identifiant immo non trouvé"})
+        console.log ("immo non trouvé" + error);
+        });
+        ///
+        ///
+        // Code sans JWT
+        // const supprimImmo = await immobilierModels.findByIdAndDelete(idRequete);
 
-        const supprimImmo = await immobilierModels.findByIdAndDelete(idRequete);
+        // console.log(supprimImmo);
 
-        console.log(supprimImmo);
-
-        if(supprimImmo){
-            const nomImage = supprimImmo.imageUrl.split("/images/")[1];
-            consol.log(nomImage);
-            Fs.unlink(`./images/${nomImage}`, () => console.log("image suprimé "),
-        );
-            res.status(200).json({message : "bien supprimé"});
-            console.log("supprimé: " + supprimImmo);
-        }else {
-            res
-                .status(404)
-                .json({message : "bien non trouvé et non supprimé "});
-            console.log("non supprimé car : " + supprimImmo);
-        }
+        // if(supprimImmo){
+        //     const nomImage = supprimImmo.imageUrl.split("/images/")[1];
+        //     consol.log(nomImage);
+        //     Fs.unlink(`./images/${nomImage}`, () => console.log("image suprimé "),
+        // );
+        //     res.status(200).json({message : "bien supprimé"});
+        //     console.log("supprimé: " + supprimImmo);
+        // }else {
+        //     res
+        //         .status(404)
+        //         .json({message : "bien non trouvé et non supprimé "});
+        //     console.log("non supprimé car : " + supprimImmo);
+        // }
     } catch (err) {
         res.status(500).send({
             message : err.message || "une erreur s'est produite"
