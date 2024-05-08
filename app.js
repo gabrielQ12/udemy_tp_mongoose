@@ -7,14 +7,31 @@ const proprietaireRoutes = require ("./routes/proprietaireRouter");
 const morgan = require ("./middlewares/infoRequete");
 const bodyParser = require ("./middlewares/parserDonnées");
 
+// module path
+
+const path = require("path");
+
 app.use(bodyParser);
 // morgan permet de voir les requêtes http dans la console
 app.use(morgan);
 
+app.use((req,res,next) => {
+    res.setHeader("Acces-Control-Allow-Origin", "*");
+    res.setHeader(
+        "Acces-Control-Allow-Origin",
+        "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization",
+    );
+    res.setHeader(
+        "Acces-Control-Methodes",
+        "GET, POST, PUT, DELETE, PATH, OPTIONS",
+    );
+    next();
+});
+
 // Fin des Middlewares//
 
 /// geres les images dans le dossier statique ///
-app.use("/images", express.static("images"));
+app.use("/images", express.static(path.join(__dirname,"image")));
 ///
 
 require("dotenv").config();
