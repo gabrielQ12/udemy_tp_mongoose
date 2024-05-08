@@ -2,6 +2,8 @@ const User = require("../models/proprietaireModels");
 const bcrypt = require ("bcrypt");
 const jwt = require("jsonwebtoken");
 
+require("dotenv").config();
+
 // masque les données sensible type carte banquaire
 const MaskData = require("maskdata");
 
@@ -48,7 +50,8 @@ User.findOne({ email: req.body.email,
             console.log(proprietaire);
             res.status(200).json({
                 userId: proprietaire._id,
-                token: jwt.sign({ userId: proprietaire._id,}, "Token test",{expiresIn: "1h"}),
+                token: jwt.sign({ userId: proprietaire._id,}, process.env.TOKENSECRET,
+                    {expiresIn: "1h"}),
             });
         })
             .catch((error) => res.status(500).json({error}));

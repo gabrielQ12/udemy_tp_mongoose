@@ -1,10 +1,11 @@
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 module.exports = (req, res, next) => {
     try{
 
         const token = req.header.authorization.split(" ")[1];
-        const decodedToken = jwt.verify(token, "Token test");
+        const decodedToken = jwt.verify(token, process.env.TOKENSECRET);
         const userId = decodedToken.userId;
         const timeExpire = decodedToken.exp;
         const dateExpire = new Date(timeExpire*1000);
