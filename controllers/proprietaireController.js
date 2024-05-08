@@ -38,12 +38,12 @@ User.findOne({ email: req.body.email,
 
 }).then((proprietaire)=> {
     if (!proprietaire) {
-        return res.status(401).json({ error: "propriétaire non trouvé" });
+        return res.status(401).json({ error: "mot de passe ou mail incorrect" });
         }
         bcrypt.compare(req.body.password, proprietaire.password).then((valid) => {
             console.log(valid);
             if (!valid) {
-                return res.status(401).json({ error: "mot de passe incorrect" });
+                return res.status(401).json({ error: "mot de passe ou mail incorrect" });
             }
             console.log(proprietaire);
             res.status(200).json({
