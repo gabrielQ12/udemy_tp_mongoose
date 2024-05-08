@@ -3,9 +3,11 @@ const router = express.Router();
 
 const proprietaireCtrl = require("../controllers/proprietaireController");
 
+const verifEmail = require("../middlewares/validEmail");
 
 
-router.post("/signup",proprietaireCtrl.signUp);
+
+router.post("/signup",verifEmail, proprietaireCtrl.signUp);
 router.post("/login",proprietaireCtrl.login);
 
 

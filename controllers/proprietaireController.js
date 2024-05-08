@@ -2,13 +2,22 @@ const User = require("../models/proprietaireModels");
 const bcrypt = require ("bcrypt");
 const jwt = require("jsonwebtoken");
 
+// masque les données sensible type carte banquaire
+const MaskData = require("maskdata");
+
+const maskPhoneOptions = {
+    maskWith : "0", //  il est possible de mettre une * a la place du zero cependant il faut changé le type de data utilisé par mongoose dans le model de données
+    unmaskedStratDigit : 4,
+    unmaskedEndDigits : 1
+};
+
 exports.signUp = (req, res, next) => {
     bcrypt.hash(req.body.password, 10).then((passHash)=> {
         const proprietaire = new User({
             email: req.body.email,
             password: passHash,
             name: req.body.name,
-            phone: req.body.phone,
+            phone: MaskData.maskPhone(req.body.phone,maskPhoneOptions),
         });
 
         proprietaire
