@@ -1,20 +1,26 @@
 const express = require ("express");
 const mongoose = require ("mongoose");
+const corsMiddleware = require ("./middlewares/corsOption");
 const app = express();
 const immobilierRoutes = require ("./routes/immobilierRouter");
 const proprietaireRoutes = require ("./routes/proprietaireRouter");
-// Middleware//
+
 const morgan = require ("./middlewares/infoRequete");
 const bodyParser = require ("./middlewares/parserDonnées");
 
 // module path
-
 const path = require("path");
 
 app.use(bodyParser);
+
 // morgan permet de voir les requêtes http dans la console
 app.use(morgan);
 
+// avec module cors
+app.use(corsMiddleware);
+
+
+// gerer les CORS manuellement
 app.use((req,res,next) => {
     res.setHeader("Acces-Control-Allow-Origin", "*");
     res.setHeader(
@@ -27,8 +33,9 @@ app.use((req,res,next) => {
     );
     next();
 });
+///
 
-// Fin des Middlewares//
+
 
 /// geres les images dans le dossier statique ///
 app.use("/images", express.static(path.join(__dirname,"image")));
