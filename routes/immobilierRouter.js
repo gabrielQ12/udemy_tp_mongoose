@@ -5,7 +5,9 @@ const multer = require("../middlewares/multerConfig");
 
 const immobilierCtrl = require("../controllers/immobilierController");
 
+// sécurité
 const authentification = require("../middlewares/verifyLogin");
+// fin sécurité
 
 router.get("",authentification,immobilierCtrl.getAllImmobillier);
 
